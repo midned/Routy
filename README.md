@@ -108,7 +108,9 @@ $router->delete('articles', function()
 
 });
 
-```Routy
+```
+
+Routy
 =======================
 
 Yet another routing library for php.
