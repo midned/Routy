@@ -2,6 +2,7 @@
 	"name": "th3-night/routy",
 	"description": "Yet another php routing library",
 	"keywords": ["php", "routy", "routing"],
+	"license": "MIT",
 	"autorhs": [
 		{
 			"name": "Alvaro Carneiro",
