@@ -338,7 +338,7 @@ The when filter is executed before the main action, if it returns true we'll con
 
 Example:
 
-```
+```php
 
 <?php
 
