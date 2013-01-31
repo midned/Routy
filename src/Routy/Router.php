@@ -221,12 +221,12 @@ class Router {
 	 * the $name variable as the url we're going to generate
 	 *
 	 * @param string $name The name of the route
-	 * @param array $replacements Structure to give to it
+	 * @param array|object $replacements Structure to give to it
 	 * @param integer $offset Some actions have more than one route, optionally you can declare wich one do you like to use
 	 *
 	 * @return string The build route
 	 */
-	public function to($name, array $replacements = array(), $offset = 0)
+	public function to($name, $replacements = array(), $offset = 0)
 	{
 		// try to set the route with a predefined one
 		// but if it don't exists use the name as it
@@ -241,10 +241,24 @@ class Router {
 			$route = isset($routes[$offset]) ? $routes[$offset] : $routes[0];
 		}
 		
-		// If we've to do some replacements
-		if (count($replacements))
+		// if the "replacements" variable is an object
+		// use the attributes of it to make the replacements
+		if (is_object($replacements))
 		{
-			$route = str_replace(array_keys($replacements), array_values($replacements), $route);
+			$replacements = get_object_vars($replacements);
+		}
+		
+		// let's iterate over each replacement
+		foreach ((array)$replacements as $key => $value)
+		{
+			// we dont like to put these in the parameters
+			$route = str_replace('{'.$key.'}', $value, $route);
+			
+			// if there's nothing to replace exit this loop
+			if ( ! strstr($route, '{'))
+			{
+				break;
+			}
 		}
 		
 		return $this->base() . '/' . $route;
