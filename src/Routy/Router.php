@@ -286,7 +286,7 @@ class Router {
 	 */
 	public function find($name)
 	{
-		return ( ! isset($this->name[$name])) ?: $this->name[$name];
+		return isset($this->name[$name]) ? $this->name[$name] : false;
 	}
 	
 	/**
