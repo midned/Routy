@@ -379,9 +379,9 @@ class Router {
 	 */
 	public function error($code, $handler = null)
 	{
-		// if the $code isn't an integer use it as the handler to
-		// all type of exceptions
-		if ( ! is_int($code))
+		// if the $code is a callable variable then
+		// use it as a handler for all type of http errors
+		if (is_callable($code))
 		{
 			$handler = $code;
 			$code = 'global';
