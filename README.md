@@ -13,7 +13,7 @@ It's `PSR-0` compatible.
 
 You can `git clone` it and include `src/Routy/autoload.php` to autoload the classes.
 
-And you can install it via [composer](https://packagist.org/packages/Th3-Night/Routy)
+And you can install it via [composer](https://packagist.org/packages/routy/routy)
 
 ## Documentation
 
