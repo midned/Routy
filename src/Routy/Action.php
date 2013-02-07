@@ -130,7 +130,7 @@ class Action {
 			
 			// if it returned something use it as the contents
 			// to send (it's like using route filters)
-			if (!$contents)
+			if ($contents)
 			{
 				return $contents
 			}
