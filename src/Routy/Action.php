@@ -126,7 +126,14 @@ class Action {
 		{
 			// call it passing the same arguments
 			// we're going to pass to the action
-			call_user_func_array($this->before, $arguments);
+			$contents = call_user_func_array($this->before, $arguments);
+			
+			// if it returned something use it as the contents
+			// to send (it's like using route filters)
+			if (!$contents)
+			{
+				return $contents
+			}
 		}
 		
 		// Fetch the contents of the action callback
