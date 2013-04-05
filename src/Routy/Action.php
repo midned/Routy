@@ -132,7 +132,7 @@ class Action {
 			// to send (it's like using route filters)
 			if ($contents)
 			{
-				return $contents
+				return $contents;
 			}
 		}
 		
