@@ -377,7 +377,7 @@ class Router {
 	 */
 	public function produce($error_code, $message = null)
 	{
-		throw new HttpException($message, $http_error_code);
+		throw new HttpException($message, $error_code);
 	}
 	
 	/**
