@@ -364,6 +364,23 @@ class Router {
 	}
 	
 	/**
+	 * Produce a http error with a http code and message
+	 *
+	 * <code>
+	 *	$router->produce(404); // Throw a http not found error
+	 *
+	 *	$router->produce(500, 'Something went wrong');
+	 * </code>
+	 *
+	 * @param int $error_code The code of the http error
+	 * @param string $message The message of the http error
+	 */
+	public function produce($error_code, $message = null)
+	{
+		throw new HttpException($message, $http_error_code);
+	}
+	
+	/**
 	 * Set an error handler to the given http error codes
 	 * If $code isn't an integer type it must be a callable type used to handle all type
 	 * of http errors

@@ -242,6 +242,25 @@ return $num == 2;
 
 Then if you go to `http://site.com/app_context/2` you will receive an http not found error (later we'll handle them) and you will see "Selected number: (selected one)" when the number isn't `2`.
 
+### Throwing http errors
+
+Sometimes you want to throw a http error for some reason like a record in the database that was not found or something like that, to do that exists the `Router::produce` method.
+Example:
+
+```php
+$router->get('user/{num}', function($id) use(&$router) // use the router global variable
+{
+	// some code to fetch the user
+	
+	if (!$user) // if the user doesn't exist in the database
+	{
+		$router->produce(404);
+	}
+
+	// your code
+});
+``` 
+
 ### Error handler
 
 When the current URL doesn't correspond to any defined route in the .php file we'll throw an `Routy\HttpException`. With the code of the error.
