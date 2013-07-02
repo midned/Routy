@@ -24,37 +24,27 @@ And you can install it via [composer](https://packagist.org/packages/routy/routy
 
 <?php
 
-// If not installed via composer use
-
-// the default autoloader
-
 require_once 'src/Routy/autoload.php';
+
+// if installed with composer include
+// require_once 'vendor/autoload.php';
 
 use Routy\Router;
 
 ```
 
-### Create the router
+### Creating the router instance
+
+Simple as the following lines:
+
 
 ```php
 
 <?php
 
-$app = new Router($context = 'app');
+$app = new Router();
 
 ```
-
-Will create an application router to `http://site.com/app`
-
-```php
-
-<?php
-
-$admin = new Router($context = 'app/admin/index.php');
-
-```
-
-Will create an application router to `http://site.com/pap/admin/index.php`
 
 
 ### Handle requests
@@ -263,7 +253,7 @@ $router->get('user/{num}', function($id) use(&$router) // use the router global 
 
 ### Error handler
 
-When the current URL doesn't correspond to any defined route in the .php file we'll throw an `Routy\HttpException`. With the code of the error.
+When the current URL doesn't correspond to any defined route we'll throw a `Routy\HttpException`. With the code of the error (404).
 
 Examples:
 
@@ -299,8 +289,7 @@ If we already defined a handler for an http error type the second example will h
 
 ### The `.htaccess` file
 
-You can use the router to handle requests to the `app/context/index.php` file, the route will be passed like `index.php/user/1`.
-
-You can hide the `index.php` file using `.htaccess` (there's an example one on the repo)
+You can hide the script name in the uri file using, for example, a `.htaccess` (like the example one on this repo)
 
 ### Still working on the documentation....
+
