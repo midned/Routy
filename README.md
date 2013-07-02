@@ -195,6 +195,66 @@ Wildcards::extend('some', '(...)'); // And this way you will have a {some} wildc
 
 ```
 
+### Named Routes
+
+You can use named routes to make easy the way you generate your urls.
+
+You can generate routes passing arguments to them, like creating a url for a blog entry or something like that.
+
+Using the `Routy\Action::to`
+
+Coded examples are better!:
+
+```php
+
+<?php
+
+$router->get('/', function() use(&$router)
+{
+	$arguments = array('id' => 2);
+	
+	echo 'Home page<br />';
+	echo 'Generate a route to "users/2": ';
+	echo $router->to('users', $arguments); // The first parameter is the route name and the second the values to replace  
+	
+})->named('home'); // here we identify this route with the "home" name
+
+// We can also use a object to the replacements
+$router->get('example2', function() use(&$router)
+{
+	$user = new StdClass(); // Like if we fetched it from the database
+	$user->id = 2;
+	
+	echo 'Generate a route to "users/2" using an object: ';
+	echo $router->to('users', $user); // Will obtain the varibles of the object and replace the values, like it did before  
+});
+
+$router->get('users/{id}', function($id) use(&$router)
+{
+	echo 'Id: ' . $id . '<br />';
+	echo 'Home link: ';
+	echo $router->to('home');
+	
+})->named('users'); // and this one with "users"
+
+```
+
+Simple as that.
+
+If the first parameter, the `route name` doesn't match with any defined route, we will generate an absolute url with it.
+
+```php
+
+<?php
+
+$router->get('/', function() use(&$router)
+{
+	echo $router->to('some/url'); // will return something like http://site.host/some/url
+});
+
+
+```
+
 ### Before & After filters
 
 You can execute a callback before or after the main action.
