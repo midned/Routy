@@ -1,7 +1,7 @@
 Routy
 =======================
 
-Yet another routing library for php. Very simple `REST` control
+Routing library for PHP with REST support.
 
 ## License
 
