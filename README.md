@@ -46,6 +46,33 @@ $app = new Router();
 
 ```
 
+### Generating the base url
+
+The first parameter in the constructor of the `Routy\Router` class is the `base url`. If it's null or not defined it will be generated.
+The second parameter is a boolean. In case we want to include the script name in the url we will set it to true. We will set to false otherwise (and it's false by default)
+
+The `base url` will be needed in the future if you want to generate absolute urls of your defined routes
+Examples:
+
+```php
+
+<?php
+
+$router = new Router();
+
+$router->base(); // will return something like http://site.com/
+
+$router = new Routy\Router(null, true);
+
+$router->base(); // will return something like http://site.com/index.php
+
+
+$router = new Routy\Router('http://some.net');
+
+$router->base(); // will return http://some.net
+
+
+```
 
 ### Handle requests
 
