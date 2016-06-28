@@ -10,7 +10,7 @@ namespace Routy;
  * @license MIT License
  */
 class Router {
-	
+
 	/**
 	 * List of routes names
 	 * Used to generate urls using the base url and assigning values to wildcards
@@ -18,28 +18,28 @@ class Router {
 	 * @var array
 	 */
 	protected $name = array();
-	
+
 	/**
 	 * The url of the web page, if not provided it will be automatically generated
 	 *
 	 * @var string
 	 */
 	protected $base_url;
-	
+
 	/**
 	 * The uri string requested
 	 *
 	 * @var string
 	 */
 	protected $uri;
-	
+
 	/**
 	 * List of error handlers. They will be called when we catch a HttpException error
 	 *
 	 * @var array
 	 */
 	protected $error_handlers;
-	
+
 	/**
 	 * List of callbacks assigned to certain request method
 	 *
@@ -52,7 +52,7 @@ class Router {
 		'PUT'		=>	array(),
 		'DELETE'	=>	array()
 	);
-	
+
 	/**
 	 * Generate the router
 	 *
@@ -74,7 +74,7 @@ class Router {
 		// Remove query string and trailing slashes from the uri
 		$uri = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
 
-		
+
 		// Application context
 		// To handle requests in different directories
 		if ( ! $include_filename)
@@ -82,11 +82,19 @@ class Router {
 			// Remove the file name so we can create urls
 			// without having it included
 			$context = dirname($script);
+
+			if ($context == '.') {
+				$context = '';
+			}
+		}
+
+		if ($context != '') {
+			$context = '/'.$context;
 		}
 
 		// Merge the base url with the context
-		$this->base_url = rtrim($base_url, '/') . '/' . $context . '/';
-		
+		$this->base_url = rtrim($base_url, '/') . $context .'/';
+
 		// see https://coderwall.com/p/gdam2w
 		$request_uri = explode('/', $uri);
 		$script_name = explode('/', $script);
@@ -95,7 +103,7 @@ class Router {
 
 		$this->uri = implode('/', $parts);
 	}
-	
+
 	/**
 	 * Get the base url generated
 	 *
@@ -121,7 +129,7 @@ class Router {
 	{
 		return $this->base_url;
 	}
-	
+
 	/**
 	 * Assign a callback to one or more routes
 	 *
@@ -137,11 +145,11 @@ class Router {
 	{
 		// Create the new action
 		$action = new Action($route, $callback, $this);
-		
+
 		// and save it to the corresponding request method
 		return $this->actions[$method][] = $action;
 	}
-	
+
 	/**
 	 * Assign a callback to one or more routes from every request method
 	 *
@@ -156,7 +164,7 @@ class Router {
 	{
 		return $this->register('ANY', $route, $callback);
 	}
-	
+
 	/**
 	 * Assign a callback to one or more routes from GET request method
 	 *
@@ -171,7 +179,7 @@ class Router {
 	{
 		return $this->register('GET', $route, $callback);
 	}
-	
+
 	/**
 	 * Assign a callback to one or more routes from POST request method
 	 *
@@ -186,11 +194,11 @@ class Router {
 	{
 		return $this->register('POST', $route, $callback);
 	}
-	
+
 	/**
 	 * Assign a callback to one or more routes from GET request method
 	 *
-	 * Because HTML don't support PUT/DELETE methods we use "_method" input (in $_REQUEST variable). 
+	 * Because HTML don't support PUT/DELETE methods we use "_method" input (in $_REQUEST variable).
 	 *
 	 * @param string|array $route Routes this callback with handle
 	 * @param callable $callback The callback
@@ -203,11 +211,11 @@ class Router {
 	{
 		return $this->register('PUT', $route, $callback);
 	}
-	
+
 	/**
 	 * Assign a callback to one or more routes from DELETE request method
 	 *
-	 * Because HTML don't support PUT/DELETE methods we use "_method" input (in $_REQUEST variable). 
+	 * Because HTML don't support PUT/DELETE methods we use "_method" input (in $_REQUEST variable).
 	 *
 	 * @param string|array $route Routes this callback with handle
 	 * @param callable $callback The callback
@@ -220,7 +228,7 @@ class Router {
 	{
 		return $this->register('DELETE', $route, $callback);
 	}
-	
+
 	/**
 	 * Generate a route using the base_url variable.
 	 * If there's no predefined route identified with the $name we'll use
@@ -243,33 +251,33 @@ class Router {
 		else
 		{
 			$routes = $action->route();
-			
+
 			$route = isset($routes[$offset]) ? $routes[$offset] : $routes[0];
 		}
-		
+
 		// if the "replacements" variable is an object
 		// use the attributes of it to make the replacements
 		if (is_object($replacements))
 		{
 			$replacements = get_object_vars($replacements);
 		}
-		
+
 		// let's iterate over each replacement
 		foreach ((array)$replacements as $key => $value)
 		{
 			// we dont like to put these in the parameters
 			$route = str_replace('{'.$key.'}', $value, $route);
-			
+
 			// if there's nothing to replace exit this loop
 			if ( ! strstr($route, '{'))
 			{
 				break;
 			}
 		}
-		
+
 		return $this->base() . $route;
 	}
-	
+
 	/**
 	 * Sets an identifier to this route, so we can make a url to it
 	 *
@@ -282,7 +290,7 @@ class Router {
 	{
 		$this->name[$name] = $action;
 	}
-	
+
 	/**
 	 * Get the action with this identifier
 	 *
@@ -294,7 +302,7 @@ class Router {
 	{
 		return isset($this->name[$name]) ? $this->name[$name] : false;
 	}
-	
+
 	/**
 	 * Run the router
 	 *
@@ -312,11 +320,11 @@ class Router {
 		{
 			$method = $_SERVER['REQUEST_METHOD'];
 		}
-		
+
 		// merge the actions with the ones that correspond
 		// to the actual request method
 		$actions = array_merge($this->actions['ANY'], $this->actions[$method]);
-		
+
 		try
 		{
 			// Itereate over each action
@@ -328,7 +336,7 @@ class Router {
 					// check if the current uri matches with the
 					// action's route and fetch the arguments to pass to it
 					list($matches, $arguments) = $this->matches($route);
-					
+
 					// if matches, call it with the arguments
 					// and return the contents of it
 					if ($matches)
@@ -337,7 +345,7 @@ class Router {
 					}
 				}
 			}
-			
+
 			// we finished the foreach without calling any action
 			// so we can throw a http not found error
 			throw new HttpException('Route not found', 404);
@@ -361,12 +369,12 @@ class Router {
 			{
 				$handler = function($exception){ throw $exception; };
 			}
-			
+
 			// Call the handler passing the exception instance
 			return call_user_func($handler, $error);
 		}
 	}
-	
+
 	/**
 	 * Produce a http error with a http code and message
 	 *
@@ -383,7 +391,7 @@ class Router {
 	{
 		throw new HttpException($message, $error_code);
 	}
-	
+
 	/**
 	 * Set an error handler to the given http error codes
 	 * If $code isn't an integer type it must be a callable type used to handle all type
@@ -391,7 +399,7 @@ class Router {
 	 *
 	 * <code>
 	 *	$router->error('404', function(){ }); // Will handle http errors with 404 code (page not found)
-	 *	
+	 *
 	 *	$router->error(function(){ }); // Will handle all type of http errors except 404 because we already have defined the handler for that error
 	 * </code>
 	 *
@@ -407,14 +415,14 @@ class Router {
 			$handler = $code;
 			$code = 'global';
 		}
-		
+
 		// If the handler is invalid
 		// throw an exception
 		if ( ! is_callable($handler))
 		{
 			throw new \InvalidArgumentException('The $handler parameter isn\'t valid.');
 		}
-		
+
 		// Make the $code variable an array so we can
 		// handle mutliple http errors types
 		foreach ((array)$code as $status)
@@ -422,7 +430,7 @@ class Router {
 			$this->error_handlers[(string)$status] = $handler;
 		}
 	}
-	
+
 	/**
 	 * Check if the route matches the requested uri
 	 *
@@ -433,31 +441,31 @@ class Router {
 	public function matches($route)
 	{
 		$route = trim($route, '/');
-		
+
 		// No wildcards, simply compare it
 		if ( ! strpos($route, '{'))
 		{
 			// Because it don't have regular expressions
 			// compare it and simply pass an array as arguments
 			$matches = $route == $this->uri;
-			
+
 			$arguments = array();
 		}
 		else
 		{
 			// apply wildcards to the route
 			$route = Wildcards::make($route);
-			
+
 			// Use regular expressions to compare it and
 			// store the results in the arguments array to pass
 			// them to the action
 			$arguments = array();
-			
+
 			$matches = (bool)preg_match('#^' . $route . '$#', $this->uri, $arguments);
-			
+
 			array_shift($arguments);
 		}
-		
+
 		return array($matches, $arguments);
 	}
 }
